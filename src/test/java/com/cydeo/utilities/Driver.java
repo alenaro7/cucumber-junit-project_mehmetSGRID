@@ -29,13 +29,46 @@ public class Driver {
 
         if(driverPool.get() == null){  // if driver/browser was never opened
 
-        String browserType = ConfigurationReader.getProperty("browser");
+         if(System.getProperty("BROWSER")==null){
+            browserType = ConfigurationReader.getProperty("browser");
+        } else {
+            browserType = System.getProperty("BROWSER");
+        }
 
         /*
         Depending on the browserType our switch statement will determine
         to open specific type of browser/driver
          */
         switch(browserType){
+                  case "remote-chrome":
+                try {
+                    // assign your grid server address
+                    String gridAddress = "3.235.46.80";
+                    URL url = new URL("http://"+ gridAddress + ":4444/wd/hub");
+                    DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+                    desiredCapabilities.setBrowserName("chrome");
+                    driverPool.set(new RemoteWebDriver(url, desiredCapabilities));
+                    //driverPool.set(new RemoteWebDriver(new URL("http://0.0.0.0:4444/wd/hub"),desiredCapabilities));
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "remote-firefox":
+                try {
+                    // assign your grid server address
+                    String gridAddress = "3.235.46.80";
+                    URL url = new URL("http://"+ gridAddress + ":4444/wd/hub");
+                    DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+                    desiredCapabilities.setBrowserName("firefox");
+                    driverPool.set(new RemoteWebDriver(url, desiredCapabilities));
+                    //driverPool.set(new RemoteWebDriver(new URL("http://0.0.0.0:4444/wd/hub"),desiredCapabilities));
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+                
             case "chrome":
                 WebDriverManager.chromedriver().setup();
                 driverPool.set(new ChromeDriver());
